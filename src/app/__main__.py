@@ -1,5 +1,4 @@
 import uvicorn
-from app.server import app
 
 from app.core.config import settings
 
