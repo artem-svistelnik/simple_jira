@@ -8,6 +8,7 @@ import uvloop
 from app.core.config import settings
 from app.core.db_config import db_conf
 from app.database import Database
+from exceptions.base import ApiError, api_error_handler
 from routes import include_routes
 
 
@@ -28,7 +29,7 @@ def get_application():
         title=settings.PROJECT_NAME,
         root_path=settings.ROOT_PATH,
     )
-
+    _app.add_exception_handler(ApiError, api_error_handler)
     _app.add_middleware(
         CORSMiddleware,
         allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
@@ -37,6 +38,7 @@ def get_application():
         allow_headers=["*"],
     )
 
+    # _app.add_middleware(JWTAuthenticationMiddleware)
     _app.add_middleware(DBSessionMiddleware)
     include_routes(_app)
 
